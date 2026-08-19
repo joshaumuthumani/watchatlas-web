@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1866b53d-9135-4d47-9635-47eaa69fb443" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/pr-pilot/skills/coding_standards.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/pr-pilot/skills/review_rules.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/pr-pilot/skills/system_prompt.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/watchatlas-web.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ServicePicker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ServicePicker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/AuthContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/lib/AuthContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/firestore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/firestore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/providerCatalog.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/providerCatalog.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/providerPreferences.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/providerPreferences.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/providerCatalog.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/providerCatalog.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/providerPreferences.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/providerPreferences.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="183" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {}
+}</component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOOtsjvM7_pjVM",
+        "number": 51
+      },
+      "lastSeen": 1786918379401
+    }
+  ]
+}]]></component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:aurora-peak/watchatlas-web.git&quot;,
+    &quot;accountId&quot;: &quot;b4752150-f098-4cf3-ad54-951c3d4ec403&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.053483149832956" />
+      <entry key="MS500" value="3.1510247349175935" />
+      <entry key="S2" value="9.88535309396758" />
+      <entry key="S5" value="16.044262559782048" />
+      <entry key="S10" value="19.463754175015183" />
+      <entry key="S30" value="22.34095984912064" />
+      <entry key="S60" value="23.150453377975957" />
+      <entry key="M2" value="23.57008611970349" />
+      <entry key="M5" value="23.82678313523369" />
+      <entry key="M10" value="23.91318153241875" />
+      <entry key="M15" value="23.942074236601435" />
+      <entry key="M30" value="23.971013698100332" />
+      <entry key="H1" value="23.98550098880127" />
+      <entry key="H2" value="23.992749028688024" />
+      <entry key="H4" value="23.99637414783453" />
+      <entry key="D1" value="23.99939564039474" />
+      <entry key="W1" value="23.99991366166665" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.0175821323336909" />
+      <entry key="MS500" value="3.127955215989775" />
+      <entry key="S2" value="9.864904300367824" />
+      <entry key="S5" value="16.029592031501824" />
+      <entry key="S10" value="19.454468719615786" />
+      <entry key="S30" value="22.337297238943762" />
+      <entry key="S60" value="23.148540771848218" />
+      <entry key="M2" value="23.56910862510705" />
+      <entry key="M5" value="23.826386936489214" />
+      <entry key="M10" value="23.91298255647669" />
+      <entry key="M15" value="23.941941390451433" />
+      <entry key="M30" value="23.970947177081566" />
+      <entry key="H1" value="23.98546770377161" />
+      <entry key="H2" value="23.992732380038838" />
+      <entry key="H4" value="23.996365821975793" />
+      <entry key="D1" value="23.999394252538508" />
+      <entry key="W1" value="23.999913463396258" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3I12Xahbssr8diGf1x36XFBDHJS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "codex/46-servicepicker-deps",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/josh/Dev/watchatlas-web",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "openai.usage.quota.settings",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-WS-262.9437.145" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1866b53d-9135-4d47-9635-47eaa69fb443" name="Changes" comment="" />
+      <created>1786917795151</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786917795151</updated>
+      <workItem from="1786917796397" duration="189000" />
+      <workItem from="1786918000764" duration="2483000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
