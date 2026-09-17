@@ -10,10 +10,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, preferences, updatePreferences } = useAuth();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
-  // Initialize theme from preferences or localStorage
+  // Initialize theme from preferences, localStorage, or the OS color scheme.
   useEffect(() => {
     const savedTheme = localStorage.getItem("darkMode");
-    const darkMode = preferences?.darkMode ?? (savedTheme === null ? true : savedTheme === "true");
+    const darkMode = preferences?.darkMode ?? (
+      savedTheme === null
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        : savedTheme === "true"
+    );
     setIsDarkMode(darkMode);
   }, [preferences]);
 
