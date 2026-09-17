@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { TMDBResult, getPosterUrl } from "@/lib/tmdb";
+import { TMDBResult, getTMDBImageUrl } from "@/lib/tmdb";
+import ResilientImage from "@/components/ResilientImage";
 import { Film, Tv } from "lucide-react";
 
 type Props = {
@@ -22,13 +22,11 @@ export default function ShowCard({ result }: Props) {
           className="relative w-[160px] h-[240px] rounded-xl overflow-hidden"
           style={{ background: "var(--card)" }}
         >
-          <Image
-            src={getPosterUrl(result.poster_path)}
+          <ResilientImage
+            src={getTMDBImageUrl(result.poster_path)}
+            surface="browse"
             alt={title}
-            fill
-            sizes="160px"
-            className="object-cover"
-            priority={false}
+            className="absolute inset-0 w-full h-full object-cover"
           />
 
           {/* Overlay gradient on hover */}

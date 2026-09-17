@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useAuth } from "@/lib/AuthContext";
-import { getPosterUrl } from "@/lib/tmdb";
+import { getTMDBImageUrl } from "@/lib/tmdb";
+import ResilientImage from "@/components/ResilientImage";
 import { getCountryMeta } from "@/lib/countries";
 import { getDisplayCountries } from "@/lib/getDisplayCountries";
 import {
@@ -143,17 +143,15 @@ export default function DetailsPage() {
   return (
     <div className="page-container fade-in">
       {/* Backdrop */}
-      {backdrop && (
-        <div
-          className="fixed inset-0 -z-10"
-          style={{
-            backgroundImage: `url(${getPosterUrl(backdrop, "w1280")})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "blur(20px) brightness(0.3)",
-          }}
+      <div className="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <ResilientImage
+          src={getTMDBImageUrl(backdrop, "w1280")}
+          surface="detail"
+          alt=""
+          className="w-full h-full object-cover"
+          style={{ filter: "blur(20px) brightness(0.3)", transform: "scale(1.06)" }}
         />
-      )}
+      </div>
 
       {/* Header */}
       <div className="px-6 pt-8 pb-4">
@@ -173,24 +171,14 @@ export default function DetailsPage() {
         <div className="flex flex-col md:flex-row gap-8 mb-10">
           {/* Poster */}
           <div className="flex-shrink-0 mx-auto md:mx-0">
-            {poster ? (
-              <div className="relative w-[200px] h-[300px] rounded-xl overflow-hidden shadow-2xl">
-                <Image
-                  src={getPosterUrl(poster)}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            ) : (
-              <div
-                className="w-[200px] h-[300px] rounded-xl flex items-center justify-center"
-                style={{ background: "var(--card)" }}
-              >
-                <span style={{ color: "var(--muted)" }}>No Poster</span>
-              </div>
-            )}
+            <div className="relative w-[200px] h-[300px] rounded-xl overflow-hidden shadow-2xl" style={{ background: "var(--card)" }}>
+              <ResilientImage
+                src={getTMDBImageUrl(poster)}
+                surface="detail"
+                alt={title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           {/* Info */}
@@ -366,11 +354,11 @@ export default function DetailsPage() {
                                                   : undefined
                                               }
                                             >
-                                              <Image
-                                                src={getPosterUrl(p.logo_path, "w92")}
+                                              <ResilientImage
+                                                src={getTMDBImageUrl(p.logo_path, "w92")}
+                                                surface="provider"
                                                 alt={p.provider_name}
-                                                fill
-                                                className="object-cover"
+                                                className="absolute inset-0 w-full h-full object-cover"
                                               />
                                             </div>
                                           ))}
@@ -393,11 +381,11 @@ export default function DetailsPage() {
                                         className="relative w-10 h-10 rounded-lg overflow-hidden"
                                         title={p.provider_name}
                                       >
-                                        <Image
-                                          src={getPosterUrl(p.logo_path, "w92")}
+                                        <ResilientImage
+                                          src={getTMDBImageUrl(p.logo_path, "w92")}
+                                          surface="provider"
                                           alt={p.provider_name}
-                                          fill
-                                          className="object-cover"
+                                          className="absolute inset-0 w-full h-full object-cover"
                                         />
                                       </div>
                                     ))}
@@ -417,11 +405,11 @@ export default function DetailsPage() {
                                         className="relative w-10 h-10 rounded-lg overflow-hidden"
                                         title={p.provider_name}
                                       >
-                                        <Image
-                                          src={getPosterUrl(p.logo_path, "w92")}
+                                        <ResilientImage
+                                          src={getTMDBImageUrl(p.logo_path, "w92")}
+                                          surface="provider"
                                           alt={p.provider_name}
-                                          fill
-                                          className="object-cover"
+                                          className="absolute inset-0 w-full h-full object-cover"
                                         />
                                       </div>
                                     ))}
