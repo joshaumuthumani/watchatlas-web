@@ -1,0 +1,33 @@
+{
+  "runtimes": [
+    {
+      "id": "global",
+      "name": "Global default",
+      "harness": "codex",
+      "settings": {
+        "model": "gpt-5.6-terra"
+      }
+    },
+    {
+      "id": "reasoning",
+      "name": "Reasoning",
+      "harness": "codex",
+      "settings": {
+        "provider": "subscription",
+        "model": "gpt-5.6-sol"
+      }
+    },
+    {
+      "id": "coding",
+      "name": "Coding",
+      "harness": "codex",
+      "settings": {
+        "provider": "subscription",
+        "model": "gpt-5.6-terra"
+      }
+    }
+  ],
+  "memoryReview": {
+    "lastRun": "2026-09-16 18:22"
+  }
+}
