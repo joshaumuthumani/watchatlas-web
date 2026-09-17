@@ -13,3 +13,5 @@ graphify-out/*
 
 # AI Code Review temporary files
 .ai-code-review/
+# Delivery state — worktrees and the like. Never committed.
+.akb/
