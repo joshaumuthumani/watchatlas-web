@@ -40,8 +40,8 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 ## [inferred] Uptime monitoring with multi-channel alerting
 
 - **Date:** recent (commits `e8108a4` and earlier)
-- **Decision:** `/api/health` TMDB probe + `StatusBanner` polling + daily Vercel cron (`/api/cron/health-check`, `CRON_SECRET`-protected) that fans out Discord/Slack/Resend-email alerts on status transitions with a 2-failure debounce.
-- **Why (guess):** TMDB is a hard dependency; surface outages to users (banner) and to the operator (alerts). Note: debounce state lives in module-level variables, which serverless doesn't reliably persist.
+- **Decision:** `/api/health` TMDB probe + `StatusBanner` polling + daily Vercel cron (`/api/cron/health-check`, `CRON_SECRET`-protected) that fans out Discord/Slack/Resend-email alerts on status transitions with a 2-failure debounce. The debounce document is stored in `watchatlaspreference/system-status/health-check-debounce` through `firebase-admin`, using a Vercel service-account secret.
+- **Why (guess):** TMDB is a hard dependency; surface outages to users (banner) and to the operator (alerts). Persisting the debounce state keeps the alert transition logic reliable across serverless cold starts without weakening client Firestore rules.
 
 ## [inferred] Dark-first hand-rolled design system on Tailwind v4
 

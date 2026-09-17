@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { cronState, type DebounceState } from "@/lib/cronState";
 import { sendAllNotifications } from "@/lib/notifications";
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
 
-// Track last known state to detect transitions
-let lastKnownStatus: "healthy" | "degraded" | null = null;
-let consecutiveFailures = 0;
 const FAILURE_THRESHOLD = 2;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -27,6 +25,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: "TMDB API key not configured" });
   }
 
+  let debounceState: DebounceState;
+
+  try {
+    debounceState = await cronState.getDebounceState();
+  } catch (error) {
+    console.error("Failed to read health-check debounce state", error);
+    return res.status(500).json({ error: "Failed to persist health-check debounce state" });
+  }
+
   let currentStatus: "healthy" | "degraded";
 
   try {
@@ -38,48 +45,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     currentStatus = "degraded";
   }
 
-  if (currentStatus === "degraded") {
-    consecutiveFailures++;
-  } else {
-    consecutiveFailures = 0;
-  }
+  const nextState: DebounceState = {
+    lastKnownStatus: debounceState.lastKnownStatus,
+    consecutiveFailures:
+      currentStatus === "degraded" ? debounceState.consecutiveFailures + 1 : 0,
+  };
 
   const now = new Date().toISOString();
   let notified = false;
+  let notification: Parameters<typeof sendAllNotifications>[0] | undefined;
 
   // Detect state transitions (with debounce for failures)
-  if (lastKnownStatus !== null && lastKnownStatus !== currentStatus) {
-    if (currentStatus === "degraded" && consecutiveFailures >= FAILURE_THRESHOLD) {
-      await sendAllNotifications({
+  if (nextState.lastKnownStatus !== null && nextState.lastKnownStatus !== currentStatus) {
+    if (currentStatus === "degraded" && nextState.consecutiveFailures >= FAILURE_THRESHOLD) {
+      notification = {
         title: "TMDB API is DOWN",
         message: "WatchAtlas cannot reach the TMDB API. The site is showing empty content to visitors.",
         severity: "critical",
         timestamp: now,
         details: {
-          "Consecutive Failures": consecutiveFailures,
+          "Consecutive Failures": nextState.consecutiveFailures,
           "Site URL": process.env.NEXT_PUBLIC_SITE_URL || "N/A",
         },
-      });
-      lastKnownStatus = currentStatus;
-      notified = true;
+      };
+      nextState.lastKnownStatus = currentStatus;
     } else if (currentStatus === "healthy") {
-      await sendAllNotifications({
+      notification = {
         title: "TMDB API RECOVERED",
         message: "WatchAtlas has reconnected to the TMDB API. The site is functioning normally.",
         severity: "recovery",
         timestamp: now,
-      });
-      lastKnownStatus = currentStatus;
-      notified = true;
+      };
+      nextState.lastKnownStatus = currentStatus;
     }
   } else {
-    lastKnownStatus = currentStatus;
+    nextState.lastKnownStatus = currentStatus;
+  }
+
+  try {
+    await cronState.saveDebounceState(nextState);
+  } catch (error) {
+    console.error("Failed to save health-check debounce state", error);
+    return res.status(500).json({ error: "Failed to persist health-check debounce state" });
+  }
+
+  if (notification) {
+    await sendAllNotifications(notification);
+    notified = true;
   }
 
   return res.status(200).json({
     checked: now,
     status: currentStatus,
-    consecutiveFailures,
+    consecutiveFailures: nextState.consecutiveFailures,
     notified,
   });
 }

@@ -71,6 +71,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 | `NEXT_PUBLIC_FIREBASE_*` | Yes | Firebase client config — API key, auth domain, project ID, storage bucket, sender ID, app ID |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Yes | Google Identity Services sign-in |
 | `CRON_SECRET` | Prod | Bearer auth for `/api/cron/health-check` |
+| `FIREBASE_ADMIN_SERVICE_ACCOUNT` | Prod | Firebase service-account JSON used by the cron to persist its debounce state; set only in Vercel's environment settings. |
 | `NEXT_PUBLIC_SITE_URL` | Prod | Base URL used by the cron health check |
 | `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `RESEND_API_KEY`, `NOTIFICATION_EMAIL_TO` | Optional | Outage alert channels |
 
