@@ -5,6 +5,15 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-17 — Architecture review artifacts and current gate status
+
+- **Decision:** Keep the current single-application shape as the provisional architecture: Next.js Pages Router on Vercel, server-side TMDB proxy routes, Firebase Auth/Firestore for preferences, and a separately protected monitoring cron.
+- **Why:** It matches the current product scope and existing boundaries without introducing service or deployment complexity prematurely.
+- **Security change:** Explicitly document browser/BFF/external trust boundaries, STRIDE risks, and verification criteria in `docs/architecture/`.
+- **Project tier:** **load-bearing**, confirmed by Josh on 2026-09-18. The full Stage 3 Architecture Council is required; the throwaway-tier exemption does not apply.
+- **Status:** Provisional, not frozen. Stage 3 remains blocked until Stage 2 requirements status is recorded, required council evidence is complete, and the mandatory external architecture review pair is available.
+- **Immediate fixes:** Removed PII-bearing settings-page auth logs and expanded `.env.local.example` to include deployment-only monitoring variables. Credential rotation remains an operator action outside this repository.
+
 ## [inferred] Pivot from Expo/React Native to a Next.js web app
 
 - **Date:** pre–git history of this repo (a `.expo/` remnant remains)
