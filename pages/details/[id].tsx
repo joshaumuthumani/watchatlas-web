@@ -187,7 +187,7 @@ export default function DetailsPage() {
 
             {tagline && (
               <p className="text-lg italic mb-4" style={{ color: "var(--muted)" }}>
-                "{tagline}"
+                &ldquo;{tagline}&rdquo;
               </p>
             )}
 

@@ -348,7 +348,7 @@ export default function HomePage() {
                 {loadingSearch ? (
                   "Searching..."
                 ) : results ? (
-                  <>Found <span style={{ color: "var(--foreground)", fontWeight: 600 }}>{results.length}</span> results for <span style={{ color: "var(--foreground)", fontWeight: 600 }}>"{query}"</span></>
+                  <>Found <span style={{ color: "var(--foreground)", fontWeight: 600 }}>{results.length}</span> results for <span style={{ color: "var(--foreground)", fontWeight: 600 }}>&ldquo;{query}&rdquo;</span></>
                 ) : null}
               </p>
               
