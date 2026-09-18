@@ -16,6 +16,9 @@ concurrency:
 
 jobs:
   refresh:
+    # Phase sync created Goose credentials as Production environment secrets.
+    # This job is trusted-main/manual only, so it may request that environment.
+    environment: Production
     # Credentials are exposed only on trusted main pushes or manual runs, never PRs.
     if: github.event_name == 'push' || github.repository_owner == github.actor
     runs-on: ubuntu-latest
