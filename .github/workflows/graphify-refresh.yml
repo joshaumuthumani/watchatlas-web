@@ -21,7 +21,9 @@ jobs:
     environment: Production
     # Credentials are exposed only on trusted main pushes or manual runs, never PRs.
     if: github.event_name == 'push' || github.repository_owner == github.actor
-    runs-on: ubuntu-latest
+    # Public-repo exception: this workflow checks out only trusted main/manual source.
+    # PR workflows stay on GitHub-hosted runners; see docs/DECISIONS.md (issue #69).
+    runs-on: [self-hosted, local-linux-ci]
     steps:
       - name: Mint a short-lived Goose GitHub App token
         id: goose-token
