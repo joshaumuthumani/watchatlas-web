@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: graphify-refresh-${{ github.ref }}
@@ -16,9 +17,8 @@ concurrency:
 
 jobs:
   refresh:
-    # Do not grant a forked pull request write access. The report is refreshed
-    # only from trusted main or an explicitly dispatched trusted workflow.
-    if: github.repository_owner == github.actor || github.event_name == 'push'
+    # Runs only for trusted main pushes or an explicitly dispatched trusted run.
+    if: github.event_name == 'push' || github.repository_owner == github.actor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,13 +31,18 @@ jobs:
         run: pip install graphifyy
       - name: Refresh report after source changes
         run: graphify update . --force
-      - name: Commit the CI-owned report
+      - name: Create a rule-compliant report refresh PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/graphify-refresh-${{ github.run_id }}
         run: |
           if git diff --quiet -- graphify-out/GRAPH_REPORT.md; then
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
           git add graphify-out/GRAPH_REPORT.md
           git commit -m 'chore: refresh Graphify report'
-          git push
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" --title 'chore: refresh Graphify report' --body 'Automated trusted CI refresh of the tracked Graphify report. Machine-specific Graphify artifacts remain untracked.'
