@@ -5,6 +5,14 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-18 — Public-repository exception for Stage 10 external review (issue #72)
+
+- **Decision:** Install canonical Stage 10 Phase 2 and Phase 3 workflow logic with `runs-on: ubuntu-latest` for both jobs.
+- **Trust boundary:** WatchAtlas is public. Phase 2 is triggered by pull requests and processes PR-derived data with a credentialed external reviewer. The local Apple-Silicon runner has root and Docker-host access; public, fork, and untrusted PR activity must not reach it.
+- **Exception:** GitHub-hosted execution is mandatory for this public-facing Phase 2/3 chain. This preserves the isolation rule for CI and security; it is not an adapter-availability fallback.
+- **Bootstrap:** The initial Phase 3 workflow-run approval cannot be proven until its workflow exists on main. The first bootstrap merge needs human approval. Then a disposable PR must prove exact-SHA Phase 2 evidence and a formal APPROVED review from pr-external-review-bot.
+- **Operator dependency:** OPENROUTER_PR_APPROVER_KEY and PR_EXTERNAL_REVIEW_APP_PRIVATE_KEY_B64 remain operator-managed. No secret value is committed, read, or configured by this change.
+
 ## 2026-09-18 — Trusted Graphify refresh runner boundary (issue #69)
 
 - **Decision:** Route only the `Refresh Graphify report` job to `[self-hosted, local-linux-ci]`. It runs exclusively after a trusted `main` push or an owner-initiated manual dispatch.
