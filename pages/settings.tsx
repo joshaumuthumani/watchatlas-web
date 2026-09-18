@@ -91,7 +91,6 @@ export default function SettingsPage() {
   // Load Google Sign-In for non-authenticated users
   useEffect(() => {
     if (user) {
-      console.log("User already signed in:", user.email);
       return;
     }
 
@@ -122,23 +121,17 @@ export default function SettingsPage() {
         return;
       }
 
-      console.log("Initializing Google Sign-In with client ID:", clientId.substring(0, 20) + "...");
-
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: async (response: any) => {
-          console.log("Google Sign-In callback triggered");
           if (!response.credential) {
             console.error("No credential in response");
             return;
           }
 
           try {
-            console.log("Creating Firebase credential from Google token");
             const credential = GoogleAuthProvider.credential(response.credential);
-            console.log("Signing in with Firebase...");
-            const result = await signInWithCredential(auth, credential);
-            console.log("Firebase sign-in successful:", result.user.email);
+            await signInWithCredential(auth, credential);
             // Force page reload to ensure UI updates
             window.location.reload();
           } catch (err: any) {
@@ -159,7 +152,6 @@ export default function SettingsPage() {
             size: "large",
             shape: "pill",
           });
-          console.log("Google Sign-In button rendered");
         } else {
           console.error("g_id_signin element not found");
         }

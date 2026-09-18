@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { Check, Search, Tv2, X } from "lucide-react";
+import ResilientImage from "@/components/ResilientImage";
+import { getTMDBImageUrl } from "@/lib/tmdb";
 import { useAuth } from "@/lib/AuthContext";
 import type { FavoriteService } from "@/lib/preferences";
 import {
@@ -209,15 +210,12 @@ export default function ServicePicker({
                     }}
                   >
                     <span className="relative w-10 h-10 rounded-lg overflow-hidden">
-                      {provider.logoPath ? (
-                        <Image
-                          src={`https://image.tmdb.org/t/p/w92${provider.logoPath}`}
-                          alt=""
-                          fill
-                          sizes="40px"
-                          className="object-cover"
-                        />
-                      ) : null}
+                      <ResilientImage
+                        src={getTMDBImageUrl(provider.logoPath, "w92")}
+                        surface="service-picker"
+                        alt={`${provider.name} logo`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
                     </span>
                     <span className="text-xs text-center">{provider.name}</span>
                     {chosen && <Check size={14} style={{ color: "var(--accent)" }} />}

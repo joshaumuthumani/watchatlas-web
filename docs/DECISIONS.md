@@ -5,6 +5,15 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-17 — Architecture review artifacts and current gate status
+
+- **Decision:** Keep the current single-application shape as the provisional architecture: Next.js Pages Router on Vercel, server-side TMDB proxy routes, Firebase Auth/Firestore for preferences, and a separately protected monitoring cron.
+- **Why:** It matches the current product scope and existing boundaries without introducing service or deployment complexity prematurely.
+- **Security change:** Explicitly document browser/BFF/external trust boundaries, STRIDE risks, and verification criteria in `docs/architecture/`.
+- **Project tier:** **load-bearing**, confirmed by Josh on 2026-09-18. The full Stage 3 Architecture Council is required; the throwaway-tier exemption does not apply.
+- **Status:** Provisional, not frozen. Stage 3 remains blocked until Stage 2 requirements status is recorded, required council evidence is complete, and the mandatory external architecture review pair is available.
+- **Immediate fixes:** Removed PII-bearing settings-page auth logs and expanded `.env.local.example` to include deployment-only monitoring variables. Credential rotation remains an operator action outside this repository.
+
 ## [inferred] Pivot from Expo/React Native to a Next.js web app
 
 - **Date:** pre–git history of this repo (a `.expo/` remnant remains)
@@ -40,8 +49,8 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 ## [inferred] Uptime monitoring with multi-channel alerting
 
 - **Date:** recent (commits `e8108a4` and earlier)
-- **Decision:** `/api/health` TMDB probe + `StatusBanner` polling + daily Vercel cron (`/api/cron/health-check`, `CRON_SECRET`-protected) that fans out Discord/Slack/Resend-email alerts on status transitions with a 2-failure debounce.
-- **Why (guess):** TMDB is a hard dependency; surface outages to users (banner) and to the operator (alerts). Note: debounce state lives in module-level variables, which serverless doesn't reliably persist.
+- **Decision:** `/api/health` TMDB probe + `StatusBanner` polling + daily Vercel cron (`/api/cron/health-check`, `CRON_SECRET`-protected) that fans out Discord/Slack/Resend-email alerts on status transitions with a 2-failure debounce. The debounce document is stored in `watchatlaspreference/system-status/health-check-debounce` through `firebase-admin`, using a Vercel service-account secret.
+- **Why (guess):** TMDB is a hard dependency; surface outages to users (banner) and to the operator (alerts). Persisting the debounce state keeps the alert transition logic reliable across serverless cold starts without weakening client Firestore rules.
 
 ## [inferred] Dark-first hand-rolled design system on Tailwind v4
 

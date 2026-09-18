@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Search, X, Film, Tv, TrendingUp, Star, Clock, Play, Sparkles } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import ShowCard from "@/components/ShowCard";
-import { tmdbService, searchTMDBAll, TMDBResult, getPosterUrl } from "@/lib/tmdb";
+import ResilientImage from "@/components/ResilientImage";
+import { tmdbService, searchTMDBAll, TMDBResult, getTMDBImageUrl } from "@/lib/tmdb";
 import { useAuth } from "@/lib/AuthContext";
 import { buildDiscoverQuery } from "@/lib/preferences";
 
@@ -304,15 +304,14 @@ export default function HomePage() {
                   onClick={() => handleSuggestionClick(item)}
                   className="w-full flex items-center gap-3 p-3 text-left transition-colors hover:bg-white/5"
                 >
-                  {item.poster_path ? (
-                    <div className="relative w-10 h-14 rounded overflow-hidden flex-shrink-0">
-                      <Image src={getPosterUrl(item.poster_path, "w92")} alt={item.title || item.name || ""} fill className="object-cover" />
-                    </div>
-                  ) : (
-                    <div className="w-10 h-14 rounded flex-shrink-0 flex items-center justify-center bg-white/5">
-                      <Film size={16} className="text-white/40" />
-                    </div>
-                  )}
+                  <div className="relative w-10 h-14 rounded overflow-hidden flex-shrink-0 bg-white/5">
+                    <ResilientImage
+                      src={getTMDBImageUrl(item.poster_path, "w92")}
+                      surface="discovery"
+                      alt={item.title || item.name || ""}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{item.title || item.name}</p>
                     <p className="text-xs text-white/40">

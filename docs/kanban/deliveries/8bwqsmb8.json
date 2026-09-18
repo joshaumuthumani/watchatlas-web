@@ -1,0 +1,97 @@
+{
+  "deliveryId": "8bwqsmb8",
+  "cardId": 2,
+  "title": "Remove dead NavBar component",
+  "status": "active",
+  "startedAt": 1789615647560,
+  "sessions": [
+    {
+      "sessionId": "90d1a3e9-9b43-432f-9d36-87f58b829250",
+      "action": "implement",
+      "status": "done",
+      "startedAt": 1789615647560,
+      "endedAt": 1789615993709,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 1.1300636000000002,
+      "log": ".akb/boards/docs/kanban/sessions/90d1a3e9-9b43-432f-9d36-87f58b829250.log"
+    },
+    {
+      "sessionId": "f0ce585a-21de-46bb-9e4b-543ded7c2f5c",
+      "action": "review",
+      "status": "done",
+      "startedAt": 1789615993816,
+      "endedAt": 1789616315515,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.8191764,
+      "log": ".akb/boards/docs/kanban/sessions/f0ce585a-21de-46bb-9e4b-543ded7c2f5c.log"
+    }
+  ],
+  "approved": "# Remove dead NavBar component\n\n`components/NavBar.tsx` is unused; `AppLayout.tsx` is the active navigation shell. Remove the obsolete component and repair the broken Next.js production-build configuration so the repository again has a clear navigation shell and a runnable production build.\n\n## Worth noting\n- **Production-build recovery**: Repair the Next.js build configuration in this card, expanding its formerly delete-only scope so the required production-build validation can complete.\n- **Firebase build validation**: Provide valid non-production Firebase configuration so the production build can complete page-data collection without relaxing application checks.\n- **Generated graph record**: Run or provide the trusted CI Graphify refresh before review so the repository-wide NavBar search also clears its CI-owned generated artifact.\n\n## Scope\n- Delete `components/NavBar.tsx` entirely.\n- Configure `generateBuildId` to use Next.js's normal generated build-ID fallback, preventing `npm run build` from calling an undefined generator.\n- Preserve the existing image-delivery behavior: TMDB is allowed and Next image optimization remains disabled.\n- Leave `lib/firebase`, `lib/AuthContext`, and `firebase/auth` in place; they are shared modules still in use elsewhere.\n- Provide a valid non-production Firebase configuration for the production-build validation path.\n- Refresh the CI-owned `graphify-out/GRAPH_REPORT.md` through trusted CI before review so it no longer records `NavBar`.\n",
+  "initialQuestions": 0,
+  "steps": [
+    {
+      "step": "implement",
+      "at": 1789615647560
+    },
+    {
+      "step": "review",
+      "at": 1789615993816
+    }
+  ],
+  "base": "660c8071796a71ea74ba5555b845e7b7c8b1bcef",
+  "review": {
+    "rounds": [
+      {
+        "sessionId": "f0ce585a-21de-46bb-9e4b-543ded7c2f5c",
+        "verdict": "ask",
+        "findings": [],
+        "at": 1789616315515
+      }
+    ],
+    "stopped": {
+      "reason": "ask",
+      "why": "review left 2 open decisions for you",
+      "at": 1789616315582
+    }
+  },
+  "priorStatus": "ready",
+  "commitMode": "auto",
+  "aiReview": true,
+  "targetBranch": "chore/add-kanban-board",
+  "worktree": ".akb/worktrees/2/8bwqsmb8",
+  "branch": "card/2/8bwqsmb8",
+  "approval": {
+    "required": false,
+    "events": []
+  },
+  "rules": {},
+  "workflow": {
+    "id": "coding",
+    "name": "Coding",
+    "stages": {
+      "plan": {
+        "lead": "planner",
+        "helpers": [
+          {
+            "agent": "tech-stack-advisor",
+            "extra": ""
+          },
+          {
+            "agent": "ui-designer",
+            "extra": ""
+          }
+        ]
+      },
+      "execute": {
+        "lead": "builder",
+        "helpers": []
+      },
+      "review": {
+        "lead": "reviewer",
+        "helpers": []
+      }
+    }
+  }
+}

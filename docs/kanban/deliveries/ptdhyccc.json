@@ -1,0 +1,108 @@
+{
+  "deliveryId": "ptdhyccc",
+  "cardId": 2,
+  "title": "Remove dead NavBar component",
+  "status": "cancelled",
+  "startedAt": 1789609043461,
+  "endedAt": 1789610868853,
+  "sessions": [
+    {
+      "sessionId": "3bc93340-8752-4ab2-93ce-0d57c934372c",
+      "action": "implement",
+      "status": "done",
+      "startedAt": 1789609043461,
+      "endedAt": 1789609378143,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.906418,
+      "log": ".akb/boards/docs/kanban/sessions/3bc93340-8752-4ab2-93ce-0d57c934372c.log"
+    },
+    {
+      "sessionId": "26fa4a38-c7a7-4723-be73-c48080aa3024",
+      "action": "review",
+      "status": "done",
+      "startedAt": 1789609378229,
+      "endedAt": 1789609457637,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.1492636,
+      "log": ".akb/boards/docs/kanban/sessions/26fa4a38-c7a7-4723-be73-c48080aa3024.log"
+    }
+  ],
+  "approved": "# Remove dead NavBar component\n\n`components/NavBar.tsx` is unused; `AppLayout.tsx` is the active navigation shell. Remove the obsolete component so the codebase has a single, clear navigation shell.\n\n## Worth noting\n\n## Scope\n- Delete `components/NavBar.tsx` entirely.\n- Make no other changes. Its dependencies (`lib/firebase`, `lib/AuthContext`, and\n  `firebase/auth`) are shared modules that remain in use elsewhere.\n",
+  "initialQuestions": 0,
+  "steps": [
+    {
+      "step": "implement",
+      "at": 1789609043461
+    },
+    {
+      "step": "review",
+      "at": 1789609378229
+    },
+    {
+      "step": "superseded",
+      "at": 1789610868851
+    }
+  ],
+  "base": "2d68f5273097c7ec23efa9ec4000b385700cc9a6",
+  "review": {
+    "rounds": [
+      {
+        "sessionId": "26fa4a38-c7a7-4723-be73-c48080aa3024",
+        "verdict": "ask",
+        "findings": [],
+        "at": 1789609457637
+      }
+    ],
+    "stopped": {
+      "reason": "ask",
+      "why": "review left 1 open decision for you",
+      "at": 1789609457668
+    }
+  },
+  "answers": [
+    {
+      "outcome": "changed",
+      "why": "The selected answer expands the approved delete-only card to include repairing the broken Next.js production-build configuration and validating a clean install build.",
+      "at": 1789610809422,
+      "actedAt": 1789610868851
+    }
+  ],
+  "priorStatus": "ready",
+  "commitMode": "auto",
+  "aiReview": true,
+  "targetBranch": "chore/add-kanban-board",
+  "approval": {
+    "required": false,
+    "events": []
+  },
+  "rules": {},
+  "workflow": {
+    "id": "coding",
+    "name": "Coding",
+    "stages": {
+      "plan": {
+        "lead": "planner",
+        "helpers": [
+          {
+            "agent": "tech-stack-advisor",
+            "extra": ""
+          },
+          {
+            "agent": "ui-designer",
+            "extra": ""
+          }
+        ]
+      },
+      "execute": {
+        "lead": "builder",
+        "helpers": []
+      },
+      "review": {
+        "lead": "reviewer",
+        "helpers": []
+      }
+    }
+  }
+}

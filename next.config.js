@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Returning null delegates build-ID generation to Next.js. This avoids calling
+  // a removed custom generator during production builds.
+  generateBuildId: () => null,
   images: {
     domains: ["image.tmdb.org"],
     // TMDB already serves pre-sized images (w92/w500/w1280 in the URL path).

@@ -22,10 +22,14 @@ export async function searchTMDBAll(query: string): Promise<TMDBResult[]> {
   return data.results || [];
 }
 
+export function getTMDBImageUrl(path: string | null | undefined, size: string = "w500"): string | null {
+  const normalizedPath = path?.trim();
+  return normalizedPath ? `https://image.tmdb.org/t/p/${size}${normalizedPath}` : null;
+}
+
+/** @deprecated Prefer getTMDBImageUrl with ResilientImage for rendered images. */
 export function getPosterUrl(path: string | null, size: string = "w500"): string {
-  return path
-    ? `https://image.tmdb.org/t/p/${size}${path}`
-    : "/placeholder.png";
+  return getTMDBImageUrl(path, size) ?? "/image-unavailable.svg";
 }
 
 export async function getTrendingMovies(period: "day" | "week"): Promise<TMDBResult[]> {
@@ -139,6 +143,7 @@ export async function getOnTheAirTV(): Promise<TMDBResult[]> {
 export const tmdbService = {
   searchAll: searchTMDBAll,
   getPosterUrl,
+  getTMDBImageUrl,
   getTrendingMovies,
   getTrendingTVShows,
   getPopularMovies,

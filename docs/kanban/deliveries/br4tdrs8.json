@@ -1,0 +1,105 @@
+{
+  "deliveryId": "br4tdrs8",
+  "cardId": 4,
+  "title": "Fix health-check cron's debounce state on serverless",
+  "status": "finished",
+  "startedAt": 1789610037062,
+  "endedAt": 1789610556009,
+  "sessions": [
+    {
+      "sessionId": "fd02a5a1-c619-464a-9b1a-85da84981594",
+      "action": "implement",
+      "status": "done",
+      "startedAt": 1789610037062,
+      "endedAt": 1789610431342,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.9911132,
+      "log": ".akb/boards/docs/kanban/sessions/fd02a5a1-c619-464a-9b1a-85da84981594.log"
+    },
+    {
+      "sessionId": "969f618f-cfee-4c90-894a-a23cac9d4177",
+      "action": "review",
+      "status": "done",
+      "startedAt": 1789610431507,
+      "endedAt": 1789610555648,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.2766052,
+      "log": ".akb/boards/docs/kanban/sessions/969f618f-cfee-4c90-894a-a23cac9d4177.log"
+    }
+  ],
+  "approved": "# Fix health-check cron's debounce state on serverless\n\n`pages/api/cron/health-check.ts` keeps `lastKnownStatus` and `consecutiveFailures` in module-level variables to debounce outage alerts. Because Vercel serverless functions do not guarantee a warm instance between cron invocations, that state can reset silently, causing missed alerts or repeated false alerts. Persist the debounce state across invocations.\n\n## Worth noting\n- **Firestore persistence via `firebase-admin`**: use a new dependency and a service-account credential stored as a Vercel secret, rather than the existing client SDK, so an unauthenticated write does not require weaker Firestore security rules.\n\n## Scope\n- Persist the cron's debounce state (`lastKnownStatus`, `consecutiveFailures`) in the existing `watchatlaspreference` Firestore database rather than module-level variables, so it survives cold starts between cron invocations.\n- Read the persisted state at the start of each invocation and write the updated state at the end. Keep the existing threshold, transition, and notification logic unchanged.\n- Use `firebase-admin` with a service-account credential from a new environment variable configured in Vercel project settings and never committed, avoiding a Firestore security-rule change.\n- If reading or writing state fails, send no notification for that invocation and fail it rather than infer a transition from incomplete state. Returning a `500` rather than a silent `200` keeps the failure visible in Vercel's cron and function logs.\n\n## By `tech-stack-advisor` agent\n\n| Option | What it is | Pros | Cons |\n| --- | --- | --- | --- |\n| `firebase-admin` | Official Google server SDK, v14.4.0 (September 2026), Apache-2.0, and a new dependency | Writes to the existing `watchatlaspreference` Firestore database with a service account, bypassing security rules without changing them | Adds a dependency and requires a service-account credential as a new secret |\n| `firebase` (already installed, client SDK) | Use the client SDK already in `package.json` from the cron route | No new dependency | Subject to Firestore security rules; the document would need a rule permissive enough for unauthenticated writes, exposing it to anyone who discovers the path rather than only the cron |\n| Write it ourselves (no store) | Retain today's module-level debounce state | No cost | Does not fix the bug; this is the behavior the card exists to replace |\n\n**Pick: `firebase-admin`** — reuse the project's existing Firestore database without allowing unauthenticated writes through its security rules.\n",
+  "initialQuestions": 0,
+  "steps": [
+    {
+      "step": "implement",
+      "at": 1789610037062
+    },
+    {
+      "step": "review",
+      "at": 1789610431507
+    }
+  ],
+  "base": "e94e6c4d3eeba33b57e4fb3f053868e509054827",
+  "review": {
+    "rounds": [
+      {
+        "sessionId": "969f618f-cfee-4c90-894a-a23cac9d4177",
+        "verdict": "pass",
+        "findings": [],
+        "at": 1789610555648
+      }
+    ]
+  },
+  "priorStatus": "ready",
+  "commitMode": "auto",
+  "aiReview": true,
+  "targetBranch": "chore/add-kanban-board",
+  "landing": {
+    "status": "landed",
+    "attempts": 0,
+    "commit": "660c8071796a71ea74ba5555b845e7b7c8b1bcef",
+    "onto": "e94e6c4d3eeba33b57e4fb3f053868e509054827",
+    "checks": [
+      {
+        "name": "review 969f618f",
+        "ok": true,
+        "at": 1789610555648
+      }
+    ],
+    "at": 1789610556007
+  },
+  "approval": {
+    "required": false,
+    "events": []
+  },
+  "rules": {},
+  "workflow": {
+    "id": "coding",
+    "name": "Coding",
+    "stages": {
+      "plan": {
+        "lead": "planner",
+        "helpers": [
+          {
+            "agent": "tech-stack-advisor",
+            "extra": ""
+          },
+          {
+            "agent": "ui-designer",
+            "extra": ""
+          }
+        ]
+      },
+      "execute": {
+        "lead": "builder",
+        "helpers": []
+      },
+      "review": {
+        "lead": "reviewer",
+        "helpers": []
+      }
+    }
+  }
+}

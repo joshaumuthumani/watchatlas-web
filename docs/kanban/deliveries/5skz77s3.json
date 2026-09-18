@@ -1,0 +1,105 @@
+{
+  "deliveryId": "5skz77s3",
+  "cardId": 3,
+  "title": "Reconcile the two coexisting dark-mode mechanisms",
+  "status": "finished",
+  "startedAt": 1789615546994,
+  "endedAt": 1789615928953,
+  "sessions": [
+    {
+      "sessionId": "5d86680b-f071-4027-8256-d56ded676ea6",
+      "action": "implement",
+      "status": "done",
+      "startedAt": 1789615546994,
+      "endedAt": 1789615821063,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.8125084,
+      "log": ".akb/boards/docs/kanban/sessions/5d86680b-f071-4027-8256-d56ded676ea6.log"
+    },
+    {
+      "sessionId": "6371e567-7234-47ec-81dd-ad432cdfbba1",
+      "action": "review",
+      "status": "done",
+      "startedAt": 1789615821164,
+      "endedAt": 1789615928597,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.2531208,
+      "log": ".akb/boards/docs/kanban/sessions/6371e567-7234-47ec-81dd-ad432cdfbba1.log"
+    }
+  ],
+  "approved": "# Reconcile the two coexisting dark-mode mechanisms\n\nThree uncoordinated mechanisms currently control theming: the pre-hydration script in `pages/_document.tsx`, `next-themes`'s `ThemeProvider` in `pages/_app.tsx`, and the `darkMode` preference applied by `AuthContext` and `AppLayout`. Only the last mechanism reads the actual saved preference (`localStorage[\"darkMode\"]` and Firestore). The other two therefore cause an explicit choice to flash and correct on page load, while `next-themes` can replace that choice when the OS appearance changes. Consolidate theming on the existing `darkMode` mechanism.\n\n## Worth noting\n- **First-visit theme**: When no preference is saved, use the OS color-scheme preference; every no-preference fallback must stay synchronized.\n\n## By `ui-designer` agent\nNo mockup is required: first-visit theming changes only the existing color tokens painted before hydration; layout, controls, and theme-toggle interaction remain unchanged.\n\n## Scope\n- Keep the existing `darkMode` boolean preference (`localStorage[\"darkMode\"]` and Firestore via `AuthContext`) as the single source of truth.\n- Remove `next-themes`'s `ThemeProvider` from `pages/_app.tsx` and the `next-themes` dependency.\n- Update the blocking script in `pages/_document.tsx` to read `localStorage[\"darkMode\"]`; when no value is saved, use OS `prefers-color-scheme`, matching `AuthContext` so the first paint agrees with the theme applied immediately afterward.\n- Update `AuthContext`'s no-preference fallback to use OS `prefers-color-scheme`; retain the current behavior for an explicit saved preference.\n- Update `AppLayout`'s no-preference fallback to use OS `prefers-color-scheme`, so the toggle state matches the first-visit theme.\n- No change to the toggle button, its icon/position, the Firestore schema, or `AuthContext`'s existing race-condition handling.\n",
+  "initialQuestions": 0,
+  "steps": [
+    {
+      "step": "implement",
+      "at": 1789615546994
+    },
+    {
+      "step": "review",
+      "at": 1789615821164
+    }
+  ],
+  "base": "660c8071796a71ea74ba5555b845e7b7c8b1bcef",
+  "review": {
+    "rounds": [
+      {
+        "sessionId": "6371e567-7234-47ec-81dd-ad432cdfbba1",
+        "verdict": "pass",
+        "findings": [],
+        "at": 1789615928597
+      }
+    ]
+  },
+  "priorStatus": "ready",
+  "commitMode": "auto",
+  "aiReview": true,
+  "targetBranch": "chore/add-kanban-board",
+  "landing": {
+    "status": "landed",
+    "attempts": 0,
+    "commit": "0058781931d93d82a4493d3d0e573883abe7b2a0",
+    "onto": "660c8071796a71ea74ba5555b845e7b7c8b1bcef",
+    "checks": [
+      {
+        "name": "review 6371e567",
+        "ok": true,
+        "at": 1789615928597
+      }
+    ],
+    "at": 1789615928951
+  },
+  "approval": {
+    "required": false,
+    "events": []
+  },
+  "rules": {},
+  "workflow": {
+    "id": "coding",
+    "name": "Coding",
+    "stages": {
+      "plan": {
+        "lead": "planner",
+        "helpers": [
+          {
+            "agent": "tech-stack-advisor",
+            "extra": ""
+          },
+          {
+            "agent": "ui-designer",
+            "extra": ""
+          }
+        ]
+      },
+      "execute": {
+        "lead": "builder",
+        "helpers": []
+      },
+      "review": {
+        "lead": "reviewer",
+        "helpers": []
+      }
+    }
+  }
+}

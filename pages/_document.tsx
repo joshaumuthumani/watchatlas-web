@@ -20,9 +20,11 @@ export default class MyDocument extends Document {
               __html: `
                 (function() {
                   try {
-                    var mode = localStorage.getItem('theme') || 'system';
+                    var savedTheme = localStorage.getItem('darkMode');
                     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    var theme = (mode === 'dark' || (mode === 'system' && prefersDark)) ? 'dark' : 'light';
+                    var theme = savedTheme === null
+                      ? (prefersDark ? 'dark' : 'light')
+                      : (savedTheme === 'true' ? 'dark' : 'light');
                     document.documentElement.classList.add(theme);
                   } catch (_) {}
                 })();

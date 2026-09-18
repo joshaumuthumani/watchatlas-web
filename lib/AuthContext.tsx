@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const themeRevision = useRef(0);
   const latestThemeSelection = useRef<ThemeSelection | null>(null);
 
-  // Apply theme based on darkMode preference (dark is default, light when darkMode is false)
+  // Apply theme based on darkMode preference.
   const applyTheme = (darkMode: boolean) => {
     if (darkMode) {
       document.documentElement.classList.remove("light");
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setPreferencesUid(firebaseUser.uid);
           setPreferencesStatus("ready");
 
-          // Apply dark mode preference from user prefs (default to true/dark)
+          // Apply dark mode preference from user prefs.
           applyTheme(prefs.darkMode);
           localStorage.setItem("darkMode", String(prefs.darkMode));
         } catch {
@@ -97,9 +97,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setPreferencesStatus("idle");
-        // For non-logged-in users, use localStorage or default to dark
+        // For non-logged-in users, use localStorage or the OS color scheme.
         const savedTheme = localStorage.getItem("darkMode");
-        applyTheme(savedTheme === null ? true : savedTheme === "true");
+        applyTheme(
+          savedTheme === null
+            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            : savedTheme === "true"
+        );
       }
 
       setLoading(false);

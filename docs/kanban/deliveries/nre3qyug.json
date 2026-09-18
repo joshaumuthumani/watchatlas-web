@@ -1,0 +1,105 @@
+{
+  "deliveryId": "nre3qyug",
+  "cardId": 6,
+  "title": "Verify and harden quota-independent image delivery",
+  "status": "finished",
+  "startedAt": 1789609310380,
+  "endedAt": 1789609838920,
+  "sessions": [
+    {
+      "sessionId": "1fa8f6cf-4b02-4b45-bde7-e5f41cb08a13",
+      "action": "implement",
+      "status": "done",
+      "startedAt": 1789609310380,
+      "endedAt": 1789609670190,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 1.0749136000000001,
+      "log": ".akb/boards/docs/kanban/sessions/1fa8f6cf-4b02-4b45-bde7-e5f41cb08a13.log"
+    },
+    {
+      "sessionId": "87009a74-21a4-4756-92f4-ea96978d2111",
+      "action": "review",
+      "status": "done",
+      "startedAt": 1789609670276,
+      "endedAt": 1789609838626,
+      "harness": "codex",
+      "model": "gpt-5.6-terra",
+      "costUsd": 0.44424559999999996,
+      "log": ".akb/boards/docs/kanban/sessions/87009a74-21a4-4756-92f4-ea96978d2111.log"
+    }
+  ],
+  "approved": "# Verify and harden quota-independent image delivery\n\nOn browse, discovery, title-detail, and service-selection pages, published posters, backdrops, and provider logos load directly from their source without a Vercel image-transformation request. When a source is unavailable, the page retains its title, availability information, and usable controls, and shows the designed local unavailable-image state instead of a broken or blank image.\n\n## Worth noting\n\n- **Delivery policy**: Keep direct TMDB URLs and a durable local fallback asset so remote-image failures cannot invoke Vercel processing, at the cost of image optimization.\n- **Unavailable-image behavior**: Use the designed fallback only for null, empty, or failed source requests; available sources continue to show their original images.\n\n## By `ui-designer` agent\n\n<Mockup src=\".mockups/6/browse-unavailable-source.tsx\" label=\"Browse, unavailable poster source\" />\n\n<Mockup src=\".mockups/6/discovery-unavailable-poster.tsx\" label=\"Discovery results, unavailable poster source\" />\n\n<Mockup src=\".mockups/6/title-detail-unavailable-poster.tsx\" label=\"Title detail, unavailable poster source\" />\n\n<Mockup src=\".mockups/6/service-picker-unavailable-logo.tsx\" label=\"Service picker, unavailable provider logo source\" />\n\n## Scope\n- Cover every current remote-image entry point: browse and discovery cards, including search suggestions; the title poster and backdrop; title availability-provider logos; and settings service-picker logos.\n- Preserve `images.unoptimized: true` so every successful remote source makes a direct `image.tmdb.org` browser request, never a request to `/_next/image` or another Vercel transformation endpoint.\n- Use one valid local fallback asset and an accessible unavailable-source treatment for null or empty paths and browser `load` failures, while retaining the title, media type, year, provider name, and all existing page actions or availability content.\n- Apply the fallback to posters, backdrops, and provider logos without masking successful sources or replacing an available image with a quota or transformation error.\n- Add lightweight, testable outcome measurement that separately records successful source loads and source-unavailable fallbacks for representative states without sending a Vercel image request or blocking page rendering.\n- Keep future enhancement processing outside Vercel request handling and non-blocking for publication and display.\n",
+  "initialQuestions": 0,
+  "steps": [
+    {
+      "step": "implement",
+      "at": 1789609310380
+    },
+    {
+      "step": "review",
+      "at": 1789609670276
+    }
+  ],
+  "base": "2d68f5273097c7ec23efa9ec4000b385700cc9a6",
+  "review": {
+    "rounds": [
+      {
+        "sessionId": "87009a74-21a4-4756-92f4-ea96978d2111",
+        "verdict": "pass",
+        "findings": [],
+        "at": 1789609838626
+      }
+    ]
+  },
+  "priorStatus": "ready",
+  "commitMode": "auto",
+  "aiReview": true,
+  "targetBranch": "chore/add-kanban-board",
+  "landing": {
+    "status": "landed",
+    "attempts": 0,
+    "commit": "e94e6c4d3eeba33b57e4fb3f053868e509054827",
+    "onto": "2d68f5273097c7ec23efa9ec4000b385700cc9a6",
+    "checks": [
+      {
+        "name": "review 87009a74",
+        "ok": true,
+        "at": 1789609838626
+      }
+    ],
+    "at": 1789609838918
+  },
+  "approval": {
+    "required": false,
+    "events": []
+  },
+  "rules": {},
+  "workflow": {
+    "id": "coding",
+    "name": "Coding",
+    "stages": {
+      "plan": {
+        "lead": "planner",
+        "helpers": [
+          {
+            "agent": "tech-stack-advisor",
+            "extra": ""
+          },
+          {
+            "agent": "ui-designer",
+            "extra": ""
+          }
+        ]
+      },
+      "execute": {
+        "lead": "builder",
+        "helpers": []
+      },
+      "review": {
+        "lead": "reviewer",
+        "helpers": []
+      }
+    }
+  }
+}
