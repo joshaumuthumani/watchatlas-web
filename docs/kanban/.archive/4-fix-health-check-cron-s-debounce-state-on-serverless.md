@@ -2,12 +2,15 @@
 title: Fix health-check cron's debounce state on serverless
 priority: med
 roi: high
-status: ready
+status: todo
 release: ""
 blocked_by: []
 related: []
 modules: [status-monitoring]
+archived: 2026-09-16
 questions: []
+verify:
+  - Before deploying, add FIREBASE_ADMIN_SERVICE_ACCOUNT to the Vercel project (Production and Preview as needed) with the complete Firebase service-account JSON; it must never be committed.
 ---
 
 `pages/api/cron/health-check.ts` keeps `lastKnownStatus` and `consecutiveFailures` in module-level variables to debounce outage alerts. Because Vercel serverless functions do not guarantee a warm instance between cron invocations, that state can reset silently, causing missed alerts or repeated false alerts. Persist the debounce state across invocations.
@@ -24,13 +27,13 @@ questions: []
 - If reading or writing state fails, send no notification for that invocation and fail it rather than infer a transition from incomplete state. Returning a `500` rather than a silent `200` keeps the failure visible in Vercel's cron and function logs.
 
 ## Todo
-- [ ] Add `firebase-admin` as a dependency.
-- [ ] Add `lib/firebaseAdmin.ts`: initialize the admin app once from a service-account credential in a new environment variable, guarding against re-initialization on warm invocations; export the named `watchatlaspreference` Firestore instance. If the private key uses escaped `\n` sequences to fit a PEM key in one environment variable, unescape them before passing it to `cert()`.
-- [ ] Add `lib/cronState.ts` exporting one object, `export const cronState = { getDebounceState, saveDebounceState }`, rather than loose named exports. This lets tests call `t.mock.method(cronState, ...)` without Node's `--experimental-test-module-mocks` flag, which the project's `npm test` script does not set. `getDebounceState()` returns `{ lastKnownStatus, consecutiveFailures }` from `system-status/health-check-debounce`—separate from the existing `users` collection—and defaults to `{ lastKnownStatus: null, consecutiveFailures: 0 }` when the document does not exist. `saveDebounceState(state)` writes with `{ merge: true }`.
-- [ ] Update `pages/api/cron/health-check.ts`: remove the module-level `lastKnownStatus` and `consecutiveFailures`, load state with `cronState.getDebounceState()` before the existing debounce logic, and call `cronState.saveDebounceState()` with the computed values before responding. Leave the threshold, transition, and notification logic unchanged.
-- [ ] Wrap `cronState.getDebounceState()` and `cronState.saveDebounceState()` in `try`/`catch`: on failure, log the error, skip `sendAllNotifications`, and respond with `500` and an `error` field describing the persistence failure, without throwing. The `500` ensures Vercel's cron and function failure logs surface an otherwise silent alerting outage.
-- [ ] Add `tests/healthCheckCron.test.ts`. Use `t.mock.method(cronState, "getDebounceState" | "saveDebounceState", ...)` from `lib/cronState` and mock `global.fetch` with the pattern in `tests/tmdbRoutes.test.ts`. Cover a first run with no state, degradation persisted across two runs until the alert threshold, recovery after persisted degradation, and a persistence failure that returns `500` and skips notification without throwing.
-- [ ] Document the new environment variable's name and required Vercel project setting in the PR description; the repository has no `.env.example` to update.
+- [x] Add `firebase-admin` as a dependency.
+- [x] Add `lib/firebaseAdmin.ts`: initialize the admin app once from a service-account credential in a new environment variable, guarding against re-initialization on warm invocations; export the named `watchatlaspreference` Firestore instance. If the private key uses escaped `\n` sequences to fit a PEM key in one environment variable, unescape them before passing it to `cert()`.
+- [x] Add `lib/cronState.ts` exporting one object, `export const cronState = { getDebounceState, saveDebounceState }`, rather than loose named exports. This lets tests call `t.mock.method(cronState, ...)` without Node's `--experimental-test-module-mocks` flag, which the project's `npm test` script does not set. `getDebounceState()` returns `{ lastKnownStatus, consecutiveFailures }` from `system-status/health-check-debounce`—separate from the existing `users` collection—and defaults to `{ lastKnownStatus: null, consecutiveFailures: 0 }` when the document does not exist. `saveDebounceState(state)` writes with `{ merge: true }`.
+- [x] Update `pages/api/cron/health-check.ts`: remove the module-level `lastKnownStatus` and `consecutiveFailures`, load state with `cronState.getDebounceState()` before the existing debounce logic, and call `cronState.saveDebounceState()` with the computed values before responding. Leave the threshold, transition, and notification logic unchanged.
+- [x] Wrap `cronState.getDebounceState()` and `cronState.saveDebounceState()` in `try`/`catch`: on failure, log the error, skip `sendAllNotifications`, and respond with `500` and an `error` field describing the persistence failure, without throwing. The `500` ensures Vercel's cron and function failure logs surface an otherwise silent alerting outage.
+- [x] Add `tests/healthCheckCron.test.ts`. Use `t.mock.method(cronState, "getDebounceState" | "saveDebounceState", ...)` from `lib/cronState` and mock `global.fetch` with the pattern in `tests/tmdbRoutes.test.ts`. Cover a first run with no state, degradation persisted across two runs until the alert threshold, recovery after persisted degradation, and a persistence failure that returns `500` and skips notification without throwing.
+- [x] Document the new environment variable's name and required Vercel project setting in the PR description; the repository has no `.env.example` to update.
 
 ## By `tech-stack-advisor` agent
 
