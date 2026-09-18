@@ -8,8 +8,7 @@ on:
       - graphify-out/GRAPH_REPORT.md
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
   group: graphify-refresh-${{ github.ref }}
@@ -17,12 +16,32 @@ concurrency:
 
 jobs:
   refresh:
-    # Runs only for trusted main pushes or an explicitly dispatched trusted run.
+    # Credentials are exposed only on trusted main pushes or manual runs, never PRs.
     if: github.event_name == 'push' || github.repository_owner == github.actor
     runs-on: ubuntu-latest
     steps:
+      - name: Decode Goose GitHub App key in runner memory
+        id: goose-key
+        env:
+          GOOSE_GH_APP_PRIVATE_KEY_B64: ${{ secrets.GOOSE_GH_APP_PRIVATE_KEY_B64 }}
+        run: |
+          {
+            echo 'private-key<<EOF'
+            printf '%s' "$GOOSE_GH_APP_PRIVATE_KEY_B64" | base64 --decode
+            echo
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+      - name: Mint a short-lived Goose GitHub App token
+        id: goose-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GOOSE_GH_APP_ID }}
+          private-key: ${{ steps.goose-key.outputs.private-key }}
+          owner: joshaumuthumani
+          repositories: watchatlas-web
       - uses: actions/checkout@v4
         with:
+          token: ${{ steps.goose-token.outputs.token }}
           persist-credentials: true
       - uses: actions/setup-python@v5
         with:
@@ -31,18 +50,18 @@ jobs:
         run: pip install graphifyy
       - name: Refresh report after source changes
         run: graphify update . --force
-      - name: Create a rule-compliant report refresh PR
+      - name: Create a Goose-authored report refresh PR
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.goose-token.outputs.token }}
           BRANCH: automation/graphify-refresh-${{ github.run_id }}
         run: |
           if git diff --quiet -- graphify-out/GRAPH_REPORT.md; then
             exit 0
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name 'goose[bot]'
+          git config user.email 'goose[bot]@users.noreply.github.com'
           git switch -c "$BRANCH"
           git add graphify-out/GRAPH_REPORT.md
           git commit -m 'chore: refresh Graphify report'
           git push origin "$BRANCH"
-          gh pr create --base main --head "$BRANCH" --title 'chore: refresh Graphify report' --body 'Automated trusted CI refresh of the tracked Graphify report. Machine-specific Graphify artifacts remain untracked.'
+          gh pr create --base main --head "$BRANCH" --title 'chore: refresh Graphify report' --body 'Automated trusted Goose GitHub App refresh of the tracked Graphify report. Machine-specific Graphify artifacts remain untracked.'
