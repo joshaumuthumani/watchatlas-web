@@ -25,7 +25,7 @@ Explicit trust boundaries are established to separate untrusted browser executio
 3. **External Third-Party Services (`Zero Trust / External`):**
    - TMDB v3 API (`api.themoviedb.org`).
    - Google Auth / Firebase Authentication endpoints.
-   - Discord and Slack webhooks, Resend Email API.
+   - Resend Email API.
 
 ## 4. Data Ownership & Storage Patterns
 - **User Preferences:** Stored in Cloud Firestore under a dedicated named database `watchatlaspreference` at path `users/{uid}`. Contains `favoriteCountries`, `favoriteServices`, and `darkMode` state.

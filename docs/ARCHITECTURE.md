@@ -73,14 +73,14 @@ The client never calls TMDB directly. `lib/tmdb.ts` → `/api/tmdb/*` → `api.t
 
 - `api/health.ts` — cached TMDB probe; `StatusBanner` polls it every 60s.
 - `api/cron/health-check.ts` — Vercel cron daily at 09:00 UTC, `CRON_SECRET` bearer-auth, and a 2-failure debounce with state-transition detection. Its debounce document is persisted at `system-status/health-check-debounce` in the named Firestore database through the Admin SDK, so it survives serverless cold starts.
-- `lib/notifications.ts` — on transitions, fans out to Discord webhook, Slack webhook, and Resend email.
+- `lib/notifications.ts` — on transitions, sends a best-effort Resend email alert.
 - **Operational requirement:** `FIREBASE_ADMIN_SERVICE_ACCOUNT` must be configured as a Vercel project secret containing the Firebase service-account JSON. The cron returns 500 and sends no alert if its persisted debounce state cannot be read or written.
 
 ## Environment variables
 
 In `.env.local.example` (placeholders only since `d0b6451`): `TMDB_API_KEY`, `NEXT_PUBLIC_FIREBASE_*` (6 vars), `NEXT_PUBLIC_GOOGLE_CLIENT_ID`.
 
-**Read by code but still missing from the example file:** `CRON_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT` (Vercel secret containing service-account JSON), `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `RESEND_API_KEY`, `NOTIFICATION_EMAIL_TO`, `NEXT_PUBLIC_SITE_URL`.
+**Read by code but still missing from the example file:** `CRON_SECRET`, `FIREBASE_ADMIN_SERVICE_ACCOUNT` (Vercel secret containing service-account JSON), `RESEND_API_KEY`, `NOTIFICATION_EMAIL_TO`, `NEXT_PUBLIC_SITE_URL`.
 
 ## Known drift & issues (as of 2026-07-19)
 

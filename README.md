@@ -73,7 +73,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 | `CRON_SECRET` | Prod | Bearer auth for `/api/cron/health-check` |
 | `FIREBASE_ADMIN_SERVICE_ACCOUNT` | Prod | Firebase service-account JSON used by the cron to persist its debounce state; set only in Vercel's environment settings. |
 | `NEXT_PUBLIC_SITE_URL` | Prod | Base URL used by the cron health check |
-| `DISCORD_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `RESEND_API_KEY`, `NOTIFICATION_EMAIL_TO` | Optional | Outage alert channels |
+| `RESEND_API_KEY`, `NOTIFICATION_EMAIL_TO` | Optional | Outage alert channels |
 
 > **Never commit real secrets.** `.env.local` is gitignored and `.env.local.example` holds placeholders only. Production values live in Vercel's environment settings.
 
