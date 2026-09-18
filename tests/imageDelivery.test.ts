@@ -11,6 +11,7 @@ import {
 describe("image delivery safeguards", () => {
   test("keeps Next image optimization disabled", () => {
     const nextConfig = require("../next.config.js");
+    assert.equal(nextConfig.generateBuildId(), null);
     assert.equal(nextConfig.images.unoptimized, true);
   });
 
