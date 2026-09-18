@@ -49,7 +49,6 @@ function tmdbResponse(ok: boolean): Response {
 function installEnvironment(t: { after: (callback: () => void) => void }) {
   const originalCronSecret = process.env.CRON_SECRET;
   const originalApiKey = process.env.TMDB_API_KEY;
-  const originalDiscordWebhook = process.env.DISCORD_WEBHOOK_URL;
   const originalFetch = globalThis.fetch;
   process.env.CRON_SECRET = "cron-secret";
   process.env.TMDB_API_KEY = "tmdb-key";
@@ -60,8 +59,6 @@ function installEnvironment(t: { after: (callback: () => void) => void }) {
     else process.env.CRON_SECRET = originalCronSecret;
     if (originalApiKey === undefined) delete process.env.TMDB_API_KEY;
     else process.env.TMDB_API_KEY = originalApiKey;
-    if (originalDiscordWebhook === undefined) delete process.env.DISCORD_WEBHOOK_URL;
-    else process.env.DISCORD_WEBHOOK_URL = originalDiscordWebhook;
   });
 }
 
@@ -142,7 +139,6 @@ describe("health-check cron", () => {
   test("returns 500 without notifying when debounce persistence fails", async (t) => {
     installEnvironment(t);
     t.mock.method(console, "error", () => undefined);
-    process.env.DISCORD_WEBHOOK_URL = "https://discord.example/webhook";
     let fetchCalls = 0;
     globalThis.fetch = (async () => {
       fetchCalls += 1;

@@ -37,7 +37,7 @@ The browser, Next.js/Vercel runtime, Firebase/Google, TMDB, and notification pro
 - Firestore rules are not present in this repository, so cross-user access control cannot be verified from source.
 - Client-side Firestore writes rely on deployed rules and client-side normalization; the rules/schema contract is not an artifact here.
 - Public TMDB routes have caching, but a repository-wide rate-limit policy is not evident.
-- Vercel environment access, rotation history, and webhook permissions are external controls not proven by the repo.
+- Vercel environment access, rotation history, and Resend credential permissions are external controls not proven by the repo.
 
 ### 3. Data ownership and lifecycle — **clear for v1, under-specified for growth**
 
@@ -72,7 +72,7 @@ API routes are sensibly grouped by upstream capability and use server-side TMDB 
 - Firestore rules and deployment settings are not reviewable here.
 - Public proxy endpoints can be used to amplify TMDB traffic without a documented rate limit.
 - Client auth error handling logs raw error details. These may contain provider-specific identifiers or operational information and should be reduced to safe user-facing messages plus controlled server diagnostics.
-- Notifications are best-effort and not part of the user-data path, but webhook failures should be observable without logging secrets or payload-sensitive data.
+- Notifications are best-effort and not part of the user-data path, but Resend delivery failures should be observable without logging secrets or payload-sensitive data.
 
 ## Three immediate fixes
 

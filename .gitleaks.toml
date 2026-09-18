@@ -1,0 +1,9 @@
+# Stage 1 disposition: the only findings in the 2026-09-18 full-history scan
+# were reviewed false positives. This is path-scoped deliberately: do not add
+# generic rules, commits, or broad regex allowlists without a new disposition.
+[allowlist]
+  description = "Reviewed generated Graphify cache and committed non-secret environment example"
+  paths = [
+    '''(^|/)graphify-out/cache/stat-index\.json$''',
+    '''(^|/)\.env\.local\.example$''',
+  ]

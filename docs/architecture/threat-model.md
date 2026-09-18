@@ -27,7 +27,7 @@ This model covers the browser, Next.js API routes on Vercel, Firebase Auth/Fires
 | Browser -> Firestore | User preference reads/writes | Cross-user access, tampering | Firestore rules enforce `request.auth.uid == uid`; schema validation; least privilege |
 | Vercel API routes -> TMDB | API key, query params | Secret exposure, abuse, upstream outage | Server-only secret; allowlisted endpoints; bounded input; cache and timeout |
 | Vercel cron -> Firestore Admin | Cron state | Unauthorized state mutation | `CRON_SECRET` bearer check; Admin SDK isolated to cron route; strict document path |
-| Vercel cron -> Webhooks/email | Health alert payloads | Credential leakage, notification spoofing | Server-only secrets; no sensitive user data; timeout and safe error handling |
+| Vercel cron -> Resend email | Health alert payloads | Credential leakage, notification spoofing | Server-only secrets; no sensitive user data; timeout and safe error handling |
 
 ## STRIDE Analysis
 
@@ -47,7 +47,7 @@ This model covers the browser, Next.js API routes on Vercel, Firebase Auth/Fires
 - `/api/health` and `/api/cron/health-check`.
 - Firebase Auth / Google Sign-In integration.
 - Firestore user preference rules and named database.
-- Notification webhooks and Resend API.
+- Resend email API.
 - Vercel deployment and environment settings.
 - Dependency supply chain and build artifacts.
 
@@ -66,7 +66,7 @@ This is a working threat-model draft. The mandatory `security-architect` seat co
 
 - TMDB availability and data correctness: product/operator.
 - Firebase rules and credential rotation: operator/security owner.
-- Vercel environment access and webhook secrets: operator/security owner.
+- Vercel environment access and Resend credentials: operator/security owner.
 - Rate limiting: platform owner; decision required before materially increasing traffic.
 
 ## Verification Criteria
