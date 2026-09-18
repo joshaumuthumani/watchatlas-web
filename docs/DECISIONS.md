@@ -5,6 +5,14 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-18 — Trusted Graphify refresh runner boundary (issue #69)
+
+- **Decision:** Route only the `Refresh Graphify report` job to `[self-hosted, local-linux-ci]`. It runs exclusively after a trusted `main` push or an owner-initiated manual dispatch.
+- **Trust boundary:** WatchAtlas is public. The local Apple-Silicon runners run as root and can access the host Docker socket (Docker-outside-of-Docker); any job on them can control the host Docker daemon. Public, fork, and otherwise untrusted pull-request source must never reach those runners.
+- **Hosted-runner exception:** `.github/workflows/ci.yml` and `.github/workflows/security.yml` retain `ubuntu-latest` for every pull-request checkout, test, and scanner job. This is a required isolation control, not an availability fallback.
+- **Why:** The Graphify job has no `pull_request` trigger and is restricted to protected-`main` source or a repository-owner manual dispatch. That bounded trusted surface may use the already registered local runner pool without widening the Docker-host trust boundary.
+- **Verification:** A real manually dispatched run must be shown in GitHub Actions metadata/logs as claimed by `watchatlas-local-linux-ci-1`, `-2`, or `-3` before this routing is considered effective.
+
 ## 2026-09-17 — Architecture review artifacts and current gate status
 
 - **Decision:** Keep the current single-application shape as the provisional architecture: Next.js Pages Router on Vercel, server-side TMDB proxy routes, Firebase Auth/Firestore for preferences, and a separately protected monitoring cron.
