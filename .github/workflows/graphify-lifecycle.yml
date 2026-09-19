@@ -117,11 +117,13 @@ jobs:
           GH_TOKEN: ${{ steps.goose-token.outputs.token }}
           BRANCH: automation/graphify-lifecycle-${{ github.run_id }}
         run: |
-          if git diff --quiet -- docs/graphify.json docs/graphify-refresh-log.jsonl; then exit 0; fi
+          # Initial lifecycle records are untracked; stage exactly them before
+          # checking the cached diff because unstaged git diff ignores untracked files.
+          git add docs/graphify.json docs/graphify-refresh-log.jsonl
+          if git diff --cached --quiet; then exit 0; fi
           git config user.name 'gh-goose[bot]'
           git config user.email 'gh-goose[bot]@users.noreply.github.com'
           git switch -c "$BRANCH"
-          git add docs/graphify.json docs/graphify-refresh-log.jsonl
           git commit -m "chore: record Graphify lifecycle for ${{ github.sha }}"
           git push origin "$BRANCH"
           gh pr create --base main --head "$BRANCH" --title 'chore: record Graphify lifecycle' --body 'Trusted post-merge Graphify lifecycle record. It contains merge-SHA evidence only and closes task #83.'
