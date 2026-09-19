@@ -56,6 +56,9 @@ jobs:
           repositories: watchatlas-web
       - uses: actions/checkout@v5
         with:
+          # Persist the minted Goose App credential for the lifecycle-record branch push.
+          token: ${{ steps.goose-token.outputs.token }}
+          persist-credentials: true
           ref: ${{ github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
