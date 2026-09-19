@@ -1,0 +1,25 @@
+{
+  "status": "enabled",
+  "graphify_version": "0.9.63",
+  "repository": "joshaumuthumani/watchatlas-web",
+  "graph_path": "graphify-out/graph.json",
+  "classification": "code_repository",
+  "code_layer": {
+    "command": "graphify extract . --code-only --update",
+    "requires_credentials": false,
+    "blocking": true
+  },
+  "doc_layer": {
+    "status": "not_configured",
+    "blocking": false,
+    "reason": "No Graphify-specific semantic credential channel is configured; Stage 10 credentials are never reused."
+  },
+  "last_refresh": {
+    "commit": "3df3dcece74d522c93057a0c220e2580869ae860",
+    "nodes": 298,
+    "edges": 506,
+    "result": "success",
+    "layer": "code",
+    "timestamp": "2026-09-19T02:48:32Z"
+  }
+}
