@@ -5,6 +5,14 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-18 — Control-plane authority and no-webhook reconciliation (issue #81)
+
+- **Authority:** GitHub Issues, projected into GitHub Project #13 WatchAtlas Board, is the single authoritative intent/work-item source for approved requirements, Feature/Story/Task/Bug hierarchy, ownership, stage gates, acceptance criteria, and approvals. GitHub remains authoritative for issue/PR lifecycle, checks, reviews, merges, and closes. Titles are not identity keys; Issue IDs and Project item IDs are.
+- **Webhook decision:** No event-driven repository webhook is configured at this time. This is an explicit owner-approved skip, not an unconfigured integration.
+- **Reason and impact:** WatchAtlas has an executable backlog, but a dedicated public HTTPS receiver, webhook secret/HMAC verification, delivery-id audit/idempotency store, least-privilege App, retry/alerting, and reconciliation owner are not yet justified. Project #13 is updated manually as issues/PRs change and reviewed by periodic reconciliation; it is not real-time automation.
+- **Manual process:** Each repository change links exactly one canonical GitHub Issue. Project #13 records operational Status and blocked reasons. PR/review/check/merge facts are verified from GitHub before Project updates. Ambiguous close-without-merge outcomes are flagged for owner review rather than treated as completion.
+- **Review date:** Reassess event-driven webhook synchronization before a second actively maintained repository projection or when manual reconciliation creates material delivery drift; otherwise at the next Stage 1 control review.
+
 ## 2026-09-18 — Public-repository exception for Stage 10 external review (issue #72)
 
 - **Decision:** Install canonical Stage 10 Phase 2 and Phase 3 workflow logic with `runs-on: ubuntu-latest` for both jobs.
