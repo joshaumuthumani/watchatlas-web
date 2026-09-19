@@ -1,0 +1,129 @@
+name: Graphify lifecycle
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths-ignore:
+      - docs/graphify.json
+      - docs/graphify-refresh-log.jsonl
+      - graphify-out/GRAPH_REPORT.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: graphify-lifecycle-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  graphify-freshness:
+    name: Graph freshness
+    if: github.event_name == 'pull_request'
+    # Public and fork PR source remains on GitHub-hosted isolation.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Graphify
+        run: python -m pip install --disable-pip-version-check 'graphifyy==0.9.63'
+      - name: Assert exact-head code freshness
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: ./.github/scripts/graphify-gate.sh "$HEAD_SHA"
+
+  graphify-lifecycle:
+    name: Trusted post-merge lifecycle
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    environment: Production
+    # Trusted main/manual source only; public PR source never reaches this runner.
+    runs-on: [self-hosted, local-linux-ci]
+    steps:
+      - name: Mint lifecycle record writer token
+        id: goose-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GOOSE_GH_APP_ID }}
+          private-key: ${{ secrets.GOOSE_GH_APP_PRIVATE_KEY }}
+          owner: joshaumuthumani
+          repositories: watchatlas-web
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Graphify
+        run: python -m pip install --disable-pip-version-check 'graphifyy==0.9.63'
+      - name: Extract trusted code layer
+        id: extract
+        run: |
+          set +e
+          graphify extract . --code-only --update
+          rc=$?
+          echo "result=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Write lifecycle records
+        env:
+          MERGE_SHA: ${{ github.sha }}
+          EXTRACT_RESULT: ${{ steps.extract.outputs.result }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+          sha = os.environ['MERGE_SHA']
+          now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+          graph = Path('graphify-out/graph.json')
+          result, nodes, edges, failure = 'failed', 0, 0, None
+          if os.environ.get('EXTRACT_RESULT') == '0' and graph.exists():
+              data = json.loads(graph.read_text())
+              nodes, edges = len(data.get('nodes', [])), len(data.get('links', []))
+              if data.get('built_at_commit') == sha and nodes > 0:
+                  result = 'success'
+              else:
+                  failure = 'built_at_commit or node-count assertion failed'
+          else:
+              failure = 'code extraction failed or graph.json missing'
+          docs = Path('docs'); docs.mkdir(exist_ok=True)
+          marker = docs / 'graphify.json'
+          record = {
+            'status': 'enabled',
+            'graphify_version': subprocess.check_output(['graphify','--version'], text=True).strip().split()[-1],
+            'repository': os.environ.get('GITHUB_REPOSITORY'),
+            'graph_path': 'graphify-out/graph.json',
+            'classification': 'code_repository',
+            'code_layer': {'command':'graphify extract . --code-only --update','requires_credentials':False,'blocking':True},
+            'doc_layer': {'status':'not_configured','blocking':False,'reason':'No Graphify-specific semantic credential channel is configured; Stage 10 credentials are never reused.'},
+            'last_refresh': {'commit':sha,'nodes':nodes,'edges':edges,'result':result,'layer':'code','timestamp':now},
+          }
+          if failure: record['last_refresh']['failure'] = failure
+          marker.write_text(json.dumps(record, indent=2) + '\n')
+          event={'merge_sha':sha,'timestamp':now,'result':result,'layer':'code','nodes':nodes,'edges':edges,'classification':'enabled'}
+          if failure: event['failure']=failure
+          with (docs/'graphify-refresh-log.jsonl').open('a') as out: out.write(json.dumps(event,separators=(',',':'))+'\n')
+          Path('graphify-lifecycle-result').write_text(result+'\n')
+          PY
+      - name: Create lifecycle-record PR
+        env:
+          GH_TOKEN: ${{ steps.goose-token.outputs.token }}
+          BRANCH: automation/graphify-lifecycle-${{ github.run_id }}
+        run: |
+          if git diff --quiet -- docs/graphify.json docs/graphify-refresh-log.jsonl; then exit 0; fi
+          git config user.name 'gh-goose[bot]'
+          git config user.email 'gh-goose[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
+          git add docs/graphify.json docs/graphify-refresh-log.jsonl
+          git commit -m "chore: record Graphify lifecycle for ${{ github.sha }}"
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" --title 'chore: record Graphify lifecycle' --body 'Trusted post-merge Graphify lifecycle record. It contains merge-SHA evidence only and closes task #83.'
+      - name: Fail closed on code-layer failure
+        run: test "$(cat graphify-lifecycle-result)" = success
