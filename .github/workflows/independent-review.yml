@@ -42,17 +42,15 @@ jobs:
         uses: actions/github-script@v7
         env:
           PR_URL: ${{ env.PR_URL }}
-          STAGE10_PHASE1_CHECK_NAMES: ${{ vars.STAGE10_PHASE1_CHECK_NAMES }}
         with:
           script: |
             const fs = require('fs');
             const match = process.env.PR_URL.match(/\/pull\/(\d+)\/?$/);
             if (!match) throw new Error(`Invalid pull-request URL: ${process.env.PR_URL}`);
-            let requiredCheckNames;
-            try { requiredCheckNames = JSON.parse(process.env.STAGE10_PHASE1_CHECK_NAMES); } catch {}
-            if (!Array.isArray(requiredCheckNames) || requiredCheckNames.length === 0) {
-              throw new Error('STAGE10_PHASE1_CHECK_NAMES must be a non-empty JSON array.');
-            }
+            // Required Phase 1 checks. Hardcoded (not a repo variable): GitHub withholds
+            // repository variables on fork-triggered pull_request runs, which broke the
+            // fail-closed evidence chain (issue #94). These names are not sensitive.
+            const requiredCheckNames = ['test', 'gitleaks', 'semgrep', 'dependency-audit'];
             const pull_number = Number(match[1]);
             const { data: pr } = await github.rest.pulls.get({
               owner: context.repo.owner, repo: context.repo.repo, pull_number,
