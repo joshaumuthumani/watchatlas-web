@@ -26,6 +26,7 @@ jobs:
         with:
           path: phase2-artifacts
           run-id: ${{ github.event.workflow_run.id }}
+          pattern: phase2-evidence-*-attempt-${{ github.event.workflow_run.run_attempt }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate frozen evidence

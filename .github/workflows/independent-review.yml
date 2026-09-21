@@ -179,7 +179,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: phase2-evidence-${{ steps.phase1.outputs.pr_number }}-${{ steps.phase1.outputs.head_sha }}
+          name: phase2-evidence-${{ steps.phase1.outputs.pr_number }}-${{ steps.phase1.outputs.head_sha }}-attempt-${{ github.run_attempt }}
           path: phase2-evidence.json
           retention-days: 14
 
