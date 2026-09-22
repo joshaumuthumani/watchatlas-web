@@ -89,12 +89,22 @@ jobs:
         env:
           PRIVATE_KEY_B64: ${{ secrets.PR_EXTERNAL_REVIEW_APP_PRIVATE_KEY_B64 }}
         run: |
-          # Decoding a secret produces a value the runner has never seen, so it is not
-          # auto-masked. Collapse to one line and mask it before it can reach any log
-          # (including the with: block create-github-app-token logs for the next step).
-          private_key=$(printf '%s' "$PRIVATE_KEY_B64" | base64 --decode | awk 'BEGIN {ORS="\\n"} {print}' | head -c -2)
-          echo "::add-mask::$private_key"
-          echo "private_key=$private_key" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          # A value *derived* from a secret is a new string the runner has never seen, so it
+          # is not auto-masked -- and create-github-app-token logs its `with:` inputs. Collapse
+          # the PEM to a single line of literal \n escapes (::add-mask:: only masks single-line
+          # values), mask it before anything else, then emit it; the action's private-key input
+          # un-escapes \n back to real newlines.
+          # tr -d '\r' first: ::add-mask:: treats a CR as a line terminator, so a CRLF-sourced
+          # PEM would register a mask truncated at the first CR while the full key still
+          # reached $GITHUB_OUTPUT and the with: block the runner logs for the next step.
+          private_key="$(printf '%s' "$PRIVATE_KEY_B64" | base64 --decode | tr -d '\r' | awk 'BEGIN{ORS="\\n"}{print}')"
+          printf '%s\n' "::add-mask::${private_key}"
+          case "$private_key" in
+            '-----BEGIN '*'PRIVATE KEY-----'*) ;;
+            *) echo 'Decoded PR_EXTERNAL_REVIEW_APP_PRIVATE_KEY_B64 is not a PEM private key'; exit 1 ;;
+          esac
+          printf 'private_key=%s\n' "$private_key" >> "$GITHUB_OUTPUT"
 
       - name: Create independent reviewer token
         id: app-token
