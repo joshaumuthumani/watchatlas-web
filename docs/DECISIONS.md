@@ -5,6 +5,15 @@ Entries marked `[inferred]` were reconstructed from code and git history during 
 
 ---
 
+## 2026-09-25 — SDLC sync: declared Stage 3, in progress (issue #98)
+
+- **Decision:** Add the README Stage/Tier line required by Stage 1 (`docs/sdlc-sync-contract.md` in `projects-status`). Declared stage is **3, in progress** — the lower of two candidate readings, per the sync skill's "never inflate; when ambiguous, declare the lower stage" rule.
+- **Evidence for Stage 3 (mechanical, file-existence only):** `docs/architecture/` is non-empty (`architecture.md`, `threat-model.md`, `design-review.md`, `adr/0001-server-side-tmdb-proxy.md`); tier confirmed in the 2026-09-17 entry below.
+- **Evidence against declaring higher:** `docs/architecture/design-review.md` (dated 2026-09-17) states in its own words that Architecture and requirements governance is a **"BLOCKER for Stage 3 completion"** and that the repo is "not yet architecture-gate ready." No later entry in this log records the council reconciling or freezing that review.
+- **Flagged drift (not resolved by this entry):** git history shows continued feature development and real merged PRs (e.g. #58, #59, #60 and later) flowing through an operating Stage 10 PR gate (`.github/workflows/ci.yml`, `independent-review.yml`, `pr-verdict.yml`) after the 2026-09-17 blocker was recorded. That is Stage 9/10-level activity happening while Stage 3 is still marked blocked in this repo's own documentation. This sync intentionally does not resolve that contradiction — it surfaces it for the repo owner to either formally close Stage 3 (reconcile the council findings, freeze the architecture docs) or explicitly accept continuing to build ahead of it.
+- **Gaps not filled by this sync (declared stage is 3, so these sit beyond it and are reported, not fabricated):** Stage 3A design-direction artifacts (`docs/design/` was empty — a stub was added, see below), Stage 5 (`docs/evaluations/`), Stage 7 (`docs/planning/` — related planning content exists under `docs/superpowers/plans/` and `docs/kanban/` instead, a `present_under_different_name` candidate the repo owner should confirm rather than this sync renaming anything), Stage 9.5 (`work-item-link.yml`), Stage 11 (`docs/review-policy.md`). `.github/workflows/gate.yml` is also absent; `ci.yml` + `security.yml` appear to cover the same isolation/scan intent (another `present_under_different_name` candidate, same pattern as Ledger PR #201).
+- **Scope:** bookkeeping only — no architecture, PRD, threat-model, or evaluation content was authored or altered by this entry.
+
 ## 2026-09-18 — Control-plane authority and no-webhook reconciliation (issue #81)
 
 - **Authority:** GitHub Issues, projected into GitHub Project #13 WatchAtlas Board, is the single authoritative intent/work-item source for approved requirements, Feature/Story/Task/Bug hierarchy, ownership, stage gates, acceptance criteria, and approvals. GitHub remains authoritative for issue/PR lifecycle, checks, reviews, merges, and closes. Titles are not identity keys; Issue IDs and Project item IDs are.
