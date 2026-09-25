@@ -17,6 +17,9 @@
 
 ---
 
+- **Tier:** load-bearing, confirmed by Josh on 2026-09-18 (`docs/DECISIONS.md`, "2026-09-17 — Architecture review artifacts and current gate status").
+- **Stage:** 3 in progress — Architecture Council documents (`docs/architecture/architecture.md`, `threat-model.md`, `design-review.md`) are drafted but explicitly **not frozen**; `docs/architecture/design-review.md` records the council as a "BLOCKER for Stage 3 completion" as of 2026-09-17. Note: build activity and the Stage 10 PR gate (`ci.yml`, `independent-review.yml`, `pr-verdict.yml`) have continued operating in practice since that date — this drift between the declared-blocked Stage 3 and observed Stage 9/10 activity is flagged, not resolved, here; see `docs/DECISIONS.md`.
+
 ## About
 
 Streaming catalogs differ wildly between countries, and most guides only show your own region. **WatchAtlas** searches TMDB and shows where a title can be streamed, rented, or bought **across every country, grouped by continent** — with sign-in to save the countries you care about so availability filters to them.
