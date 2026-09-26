@@ -2,11 +2,12 @@
 title: Remove dead NavBar component
 priority: low
 roi: low
-status: implementing
+status: todo
 release: ""
 blocked_by: []
 related: []
 modules: []
+archived: 2026-09-26
 questions:
   - question: "[user] A valid non-production Firebase configuration is unavailable. Please configure one in the CI/build environment, then rerun the production build."
     mode: single
